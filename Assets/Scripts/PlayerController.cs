@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, Input.GetAxis("Vertical") * speed);
         if(Input.GetAxis("Start")>0.0f)
         {
-            //Start ball
+            GameManager.Instance.LaunchBall();
         }
     }
 }
