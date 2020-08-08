@@ -39,8 +39,6 @@ public class GameManager : MonoBehaviour
         highScore = PlayerPrefs.GetInt(highScoreKey, 0);
         highScoreText.text = "Najlepszy wynik: " + highScore.ToString();
         Instance = this;
-        PlayerPrefs.SetInt(highScoreKey, 0);
-        PlayerPrefs.Save();
         DontDestroyOnLoad(this.gameObject);
     }
 
