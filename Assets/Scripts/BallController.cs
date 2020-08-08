@@ -71,12 +71,12 @@ public class BallController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && !isHitAlready)
+        if (collision.gameObject.CompareTag("Player"))// && !isHitAlready)
         {
             isHitAlready = true;
             GameManager.Instance.IncreaseScore();
             Debug.Log("Trafil gracza");
-            Vector2 dir = transform.position - collision.gameObject.transform.position;
+            Vector2 dir = transform.position - new Vector3(collision.gameObject.transform.position.x-1.5f, collision.gameObject.transform.position.y,0.0f);
             dir = dir.normalized;
             Debug.DrawRay(transform.position, dir, Color.cyan, 20.0f);
             velocity = dir * speed;
@@ -87,7 +87,7 @@ public class BallController : MonoBehaviour
             //velocity = wallNormal * velocity.magnitude;
             //if (velocity.x < 0) velocity.x *= -1;
         }
-        else if (collision.gameObject.CompareTag("Player"))
+        /*else if (collision.gameObject.CompareTag("Player"))
         {
             isHitAlready = true;
             Vector2 dir = transform.position - collision.gameObject.transform.position;
@@ -95,7 +95,7 @@ public class BallController : MonoBehaviour
             Debug.DrawRay(transform.position, dir, Color.cyan, 20.0f);
             velocity = dir * velocity.magnitude;
             CheckWall();
-        }
+        }*/
         else if (collision.gameObject.CompareTag("Kill"))
         {
             GameManager.Instance.Kill();

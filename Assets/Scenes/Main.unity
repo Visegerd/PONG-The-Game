@@ -299,7 +299,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!223 &212564794
 Canvas:
   m_ObjectHideFlags: 0
@@ -716,7 +716,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'HIGHSCORE: 9999'
+  m_Text: 'Najlepszy wynik: 9999'
 --- !u!222 &649672684
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -988,7 +988,7 @@ GameObject:
   - component: {fileID: 930907460}
   - component: {fileID: 930907459}
   m_Layer: 0
-  m_Name: GameOver
+  m_Name: OverOver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1044,7 +1044,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: GAME OVER
+  m_Text: Koniec Gry
 --- !u!222 &930907460
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1121,7 +1121,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'FINAL SCORE: 9999'
+  m_Text: "Wynik ko\u0144cowy: 9999"
 --- !u!222 &954285721
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1289,7 +1289,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: PLAY
+  m_Text: Nowa Gra
 --- !u!222 &1037534169
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1832,7 +1832,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Score: 0'
+  m_Text: 'Punkty: 0'
 --- !u!222 &1318318105
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2104,7 +2104,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: QUIT
+  m_Text: "Wyj\u015Bcie z gry"
 --- !u!222 &1444546589
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2204,7 +2204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!223 &1535428642
 Canvas:
   m_ObjectHideFlags: 0
@@ -2366,7 +2366,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Lives: 3'
+  m_Text: "\u017Bycia: 3"
 --- !u!222 &1566911092
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2556,7 +2556,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'HIGHSCORE: 9999'
+  m_Text: 'Najlepszy wynik: 9999'
 --- !u!222 &1816924107
 CanvasRenderer:
   m_ObjectHideFlags: 0
