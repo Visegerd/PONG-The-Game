@@ -5,12 +5,14 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float speed;
-    private Rigidbody2D rb;
+    private Rigidbody rb;
+    private BoxCollider col;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
+        col = GetComponentInChildren<BoxCollider>();
     }
 
     // Update is called once per frame
@@ -22,4 +24,19 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.LaunchBall();
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //if(collision.gameObject.CompareTag("Ball"))
+        //{
+        //    StartCoroutine(TempTurnOffCollider());
+        //}
+    }
+
+    //IEnumerator TempTurnOffCollider()
+    //{
+    //    col.enabled = false;
+    //    yield return new WaitForEndOfFrame();
+    //    col.enabled = true;
+    //}
 }

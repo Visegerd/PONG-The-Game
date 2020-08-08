@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public Text lives;
     public Text score;
     public Text finalScore;
+    public Text gameOverHighScore;
+    public Text highScoreText;
 
     public static GameManager Instance;
 
@@ -23,6 +25,7 @@ public class GameManager : MonoBehaviour
     private int currentScore = 0;
     private int highScore;
     private int playerLives = 3;
+    private string highScoreKey = "HighScore";
 
     public float baseBallSpeed;
 
@@ -33,7 +36,8 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-
+        highScore = PlayerPrefs.GetInt(highScoreKey, 0);
+        highScoreText.text = "HIGHSCORE: " + highScore.ToString();
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
     }
@@ -58,6 +62,16 @@ public class GameManager : MonoBehaviour
         gameCanvas.SetActive(true);
         isBallReady = true;
         playerLives = 3;
+        currentScore = 0;
+        lives.text = "Lives: " + playerLives.ToString();
+        score.text = "Score: " + currentScore.ToString();
+        BallController bc = ball.GetComponent<BallController>();
+        Rigidbody rb = ball.GetComponent<Rigidbody>();
+        bc.velocity = new Vector2(0.0f, 0.0f);
+        rb.isKinematic = true;
+        isBallReady = true;
+        ball.transform.position = new Vector2(0.0f, 0.0f);
+        player.transform.position = new Vector2(-8.0f, 0.0f);
     }
 
     public void LaunchBall()
@@ -66,9 +80,13 @@ public class GameManager : MonoBehaviour
         {
             isBallReady = !isBallReady;
             BallController bc = ball.GetComponent<BallController>();
+            Rigidbody rb = ball.GetComponent<Rigidbody>();
+            rb.isKinematic = false;
             bc.velocity = new Vector2(Random.Range(1.0f, 2.0f), Random.Range(0.0f, 2.0f));
             float multiplier = bc.velocity.magnitude / baseBallSpeed;
             bc.velocity = new Vector2(bc.velocity.x/multiplier, bc.velocity.y / multiplier);
+            bc.speed = baseBallSpeed;
+            bc.CheckWall();
         }
     }
 
@@ -77,10 +95,11 @@ public class GameManager : MonoBehaviour
         currentScore++;
         BallController bc = ball.GetComponent<BallController>();
         //float speedX, speedY;
-        Vector2 ballDir = bc.velocity;
-        ballDir *= (bc.velocity.magnitude + baseBallSpeed / 100.0f) / bc.velocity.magnitude;
-        Debug.Log(bc.velocity.magnitude);
-        bc.velocity = ballDir;
+        //Vector2 ballDir = bc.velocity;
+        bc.speed *= (bc.velocity.magnitude + baseBallSpeed / 100.0f) / bc.velocity.magnitude;
+        
+        //Debug.Log(bc.velocity.magnitude);
+        //bc.velocity = ballDir;
         /*if (ballRg.velocity.x >= 0)
         {
             speedX = ballDir.x;
@@ -105,7 +124,9 @@ public class GameManager : MonoBehaviour
         else
         {
             BallController bc = ball.GetComponent<BallController>();
-            bc.velocity *= 0;
+            Rigidbody rb = ball.GetComponent<Rigidbody>();
+            bc.velocity = new Vector2(0.0f, 0.0f);
+            rb.isKinematic = true;
             lives.text = "Lives: " + playerLives.ToString();
             isBallReady = true;
             ball.transform.position = new Vector2(0.0f, 0.0f);
@@ -120,6 +141,13 @@ public class GameManager : MonoBehaviour
         gameOverCanvas.SetActive(true);
         gameCanvas.SetActive(false);
         finalScore.text = "FINAL SCORE: " + currentScore.ToString();
+        if (currentScore>highScore)
+        {
+            highScore = currentScore;
+            PlayerPrefs.SetInt(highScoreKey, highScore);
+            PlayerPrefs.Save();
+        }
+        gameOverHighScore.text = "HIGHSCORE: " + highScore.ToString();
     }
 
     public void Quit()
