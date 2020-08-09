@@ -26,7 +26,7 @@ public class BallController : MonoBehaviour
         Vector2 frameStep = (Vector2)transform.position - oldPos;
         Vector2 perp = Vector2.Perpendicular(velocity);
         perp = perp.normalized;
-        #region Check raycasts at the perpendicular edges of ball if we hit player
+        #region Check raycasts at the perpendicular to velocity vector edges of ball if we hit player
         RaycastHit2D hitUp = Physics2D.Raycast((Vector2)transform.position + perp * transform.localScale.x / 2.0f, velocity / 2.0f, frameStep.magnitude);
         if (hitUp.collider != null && !isHitAlready)
         {
@@ -57,6 +57,16 @@ public class BallController : MonoBehaviour
         }
         #endregion
         oldPos = transform.position; //save current pos for next frame
+        if(transform.position.y>4.35)
+        {
+            transform.position = new Vector3(transform.position.x,4.15f);
+            velocity.y *= -1;
+        }
+        else if (transform.position.y < -4.35)
+        {
+            transform.position = new Vector3(transform.position.x, -4.15f);
+            velocity.y *= -1;
+        }
     }
 
     public void CheckWall() //Check which vertical wall will be hit next
@@ -72,14 +82,14 @@ public class BallController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player")) //if hit player, set direction outwards from player and give 1 point
         {
-            isHitAlready = true;
             GameManager.Instance.IncreaseScore();
             Debug.Log("Trafil gracza");
             Vector2 dir = transform.position - new Vector3(collision.gameObject.transform.position.x - 1.5f, collision.gameObject.transform.position.y, 0.0f);
             dir = dir.normalized;
             Debug.DrawRay(transform.position, dir, Color.cyan, 20.0f);
             velocity = dir * speed;
-            CheckWall();
+            if(!isHitAlready) CheckWall();
+            isHitAlready = true;
         }
         else if (collision.gameObject.CompareTag("Kill")) //if hit left wall
         {
@@ -103,7 +113,8 @@ public class BallController : MonoBehaviour
                 velocity.y *= -1;
                 verticalWallHit = !verticalWallHit;
             }
+            //else velocity.y *= -1;
         }
-
+        Debug.Log(collision.gameObject.tag + " --- " + isHitAlready + " --- " + verticalWallHit);
     }
 }
