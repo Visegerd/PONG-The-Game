@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
 
     public float baseBallSpeed;
 
-    private void Awake()
+    private void Awake() //set singleton and read highscore key
     {
         if (Instance != null && Instance != this)
         {
@@ -42,13 +42,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void StartGame()
+    public void StartGame() //Start game from main menu
     {
         mainMenuCanvas.SetActive(false);
         gameCanvas.SetActive(true);
@@ -56,25 +50,7 @@ public class GameManager : MonoBehaviour
         playerLives = 3;
     }
 
-    public void PlayAgain()
-    {
-        gameOverCanvas.SetActive(false);
-        gameCanvas.SetActive(true);
-        isBallReady = true;
-        playerLives = 3;
-        currentScore = 0;
-        lives.text = "Życia: " + playerLives.ToString();
-        score.text = "Punkty: " + currentScore.ToString();
-        BallController bc = ball.GetComponent<BallController>();
-        Rigidbody rb = ball.GetComponent<Rigidbody>();
-        bc.velocity = new Vector2(0.0f, 0.0f);
-        rb.isKinematic = true;
-        isBallReady = true;
-        ball.transform.position = new Vector2(0.0f, 0.0f);
-        player.transform.position = new Vector2(-8.0f, 0.0f);
-    }
-
-    public void LaunchBall()
+    public void LaunchBall() //Launch ball to play
     {
         if(isBallReady)
         {
@@ -90,31 +66,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void IncreaseScore()
+    public void IncreaseScore() //Increase player score
     {
         currentScore++;
         BallController bc = ball.GetComponent<BallController>();
-        //float speedX, speedY;
-        //Vector2 ballDir = bc.velocity;
         bc.speed *= (bc.velocity.magnitude + baseBallSpeed / 100.0f) / bc.velocity.magnitude;
-        
-        //Debug.Log(bc.velocity.magnitude);
-        //bc.velocity = ballDir;
-        /*if (ballRg.velocity.x >= 0)
-        {
-            speedX = ballDir.x;
-        }
-        else speedX = -ballDir.x;
-        if (ballRg.velocity.y >= 0)
-        {
-            speedY = ballDir.y;
-        }
-        else speedY = -ballDir.y;
-        ballRg.velocity = new Vector2(ballRg.velocity.x + speedX, ballRg.velocity.y + speedY);*/
         score.text = "Punkty: " + currentScore.ToString();
     }
 
-    public void Kill()
+    public void Kill() //Kill and reset
     {
         playerLives--;
         if(playerLives<=0)
@@ -134,7 +94,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GameOver()
+    private void PlayAgain() //Play again from game over menu
+    {
+        gameOverCanvas.SetActive(false);
+        gameCanvas.SetActive(true);
+        isBallReady = true;
+        playerLives = 3;
+        currentScore = 0;
+        lives.text = "Życia: " + playerLives.ToString();
+        score.text = "Punkty: " + currentScore.ToString();
+        BallController bc = ball.GetComponent<BallController>();
+        Rigidbody rb = ball.GetComponent<Rigidbody>();
+        bc.velocity = new Vector2(0.0f, 0.0f);
+        rb.isKinematic = true;
+        isBallReady = true;
+        ball.transform.position = new Vector2(0.0f, 0.0f);
+        player.transform.position = new Vector2(-8.0f, 0.0f);
+    }
+
+    private void GameOver() //Player ran out of lives
     {
         BallController bc = ball.GetComponent<BallController>();
         bc.velocity *= 0;
@@ -150,7 +128,7 @@ public class GameManager : MonoBehaviour
         gameOverHighScore.text = "Najlepszy wynik: " + highScore.ToString();
     }
 
-    public void Quit()
+    private void Quit() //Quit game
     {
         Application.Quit();
     }

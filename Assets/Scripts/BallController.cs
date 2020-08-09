@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    public float speed;
-    public Vector2 velocity;
-    private Rigidbody rb;
-    private bool isHitAlready = false;
-    private bool verticalWallHit;
-    private Vector2 oldPos;
+    public float speed; //actual speed
+    public Vector2 velocity; //movement vector
+
+    private Rigidbody rb; //object rigidbody
+    private bool isHitAlready = false; //bool to prevent multiple hits from happening
+    private bool verticalWallHit; //bool to prevent ball bugging inside wall
+    private Vector2 oldPos; //last frame ball position
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,13 +22,11 @@ public class BallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //actualSpeed = velocity.magnitude;
-        transform.Translate(velocity * Time.deltaTime);
+        transform.Translate(velocity * Time.deltaTime); //move ball
         Vector2 frameStep = (Vector2)transform.position - oldPos;
         Vector2 perp = Vector2.Perpendicular(velocity);
         perp = perp.normalized;
-        Debug.DrawRay((Vector2)transform.position + perp * transform.localScale.x / 2.0f, velocity.normalized * frameStep.magnitude, Color.green, 1.0f);
-        Debug.DrawRay((Vector2)transform.position - perp * transform.localScale.x / 2.0f, velocity.normalized * frameStep.magnitude, Color.green, 1.0f);
+        #region Check raycasts at the perpendicular edges of ball if we hit player
         RaycastHit2D hitUp = Physics2D.Raycast((Vector2)transform.position + perp * transform.localScale.x / 2.0f, velocity / 2.0f, frameStep.magnitude);
         if (hitUp.collider != null && !isHitAlready)
         {
@@ -37,7 +37,6 @@ public class BallController : MonoBehaviour
                 dir = dir.normalized * speed;
                 Debug.DrawRay(transform.position, dir, Color.cyan, 20.0f);
                 velocity = dir * velocity.magnitude * speed;
-                //velocity.x *= -1;
                 isHitAlready = true;
                 Debug.Log("gora");
             }
@@ -52,17 +51,17 @@ public class BallController : MonoBehaviour
                 dir = dir.normalized * speed;
                 Debug.DrawRay(transform.position, dir, Color.cyan, 20.0f);
                 velocity = dir * velocity.magnitude * speed;
-                //velocity.x *= -1;
                 isHitAlready = true;
                 Debug.Log("dol");
             }
         }
-        oldPos = transform.position;
+        #endregion
+        oldPos = transform.position; //save current pos for next frame
     }
 
-    public void CheckWall()
+    public void CheckWall() //Check which vertical wall will be hit next
     {
-        if(velocity.y>0)
+        if (velocity.y > 0)
         {
             verticalWallHit = true;
         }
@@ -71,62 +70,38 @@ public class BallController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))// && !isHitAlready)
+        if (collision.gameObject.CompareTag("Player")) //if hit player, set direction outwards from player and give 1 point
         {
             isHitAlready = true;
             GameManager.Instance.IncreaseScore();
             Debug.Log("Trafil gracza");
-            Vector2 dir = transform.position - new Vector3(collision.gameObject.transform.position.x-1.5f, collision.gameObject.transform.position.y,0.0f);
+            Vector2 dir = transform.position - new Vector3(collision.gameObject.transform.position.x - 1.5f, collision.gameObject.transform.position.y, 0.0f);
             dir = dir.normalized;
             Debug.DrawRay(transform.position, dir, Color.cyan, 20.0f);
             velocity = dir * speed;
             CheckWall();
-            //velocity.x *= -1;
-
-            //Vector2 wallNormal = collision.contacts[0].normal;
-            //velocity = wallNormal * velocity.magnitude;
-            //if (velocity.x < 0) velocity.x *= -1;
         }
-        /*else if (collision.gameObject.CompareTag("Player"))
-        {
-            isHitAlready = true;
-            Vector2 dir = transform.position - collision.gameObject.transform.position;
-            dir = dir.normalized;
-            Debug.DrawRay(transform.position, dir, Color.cyan, 20.0f);
-            velocity = dir * velocity.magnitude;
-            CheckWall();
-        }*/
-        else if (collision.gameObject.CompareTag("Kill"))
+        else if (collision.gameObject.CompareTag("Kill")) //if hit left wall
         {
             GameManager.Instance.Kill();
         }
-        else if (collision.gameObject.CompareTag("RightWall"))
+        else if (collision.gameObject.CompareTag("RightWall")) //if hit right wall
         {
             isHitAlready = false;
             velocity.x *= -1;
         }
-        else
+        else //if hit top or bottom wall
         {
             Vector2 wallNormal = collision.contacts[0].normal;
-            if (wallNormal.x!=0)
+            if (wallNormal.y < 0 && transform.position.y < 4.5 && velocity.y > 0 && verticalWallHit)
             {
-                if (wallNormal.x < 0 && transform.position.x < 8.5 && velocity.x > 0)
-                {
-                    velocity.x *= -1;
-                }
+                velocity.y *= -1;
+                verticalWallHit = !verticalWallHit;
             }
-            else 
+            else if (wallNormal.y > 0 && transform.position.y > -4.5 && velocity.y < 0 && !verticalWallHit)
             {
-                if (wallNormal.y < 0 && transform.position.y < 4.5 && velocity.y > 0 && verticalWallHit)
-                {
-                    velocity.y *= -1;
-                    verticalWallHit = !verticalWallHit;
-                }
-                else if (wallNormal.y > 0 && transform.position.y > -4.5 && velocity.y < 0 && !verticalWallHit)
-                {
-                    velocity.y *= -1;
-                    verticalWallHit = !verticalWallHit;
-                }
+                velocity.y *= -1;
+                verticalWallHit = !verticalWallHit;
             }
         }
 
